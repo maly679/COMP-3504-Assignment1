@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Assignment1 {
 
-	//array list of items and suppliers to be populated.
+	//Array lists of items and suppliers to be populated.
 	ArrayList<Items> itemsList = new ArrayList<Items>();
 	ArrayList<Suppliers> supplierList = new ArrayList<Suppliers>();
 
@@ -20,7 +20,7 @@ public class Assignment1 {
 		asg1.displayOptions();
 	}
 
-	//Populate Items text file.
+	//Populate Items text file into items arrayList.
 	public void populateItems() {
 
 		try (BufferedReader br = new BufferedReader(new FileReader(itemsFile))) {
@@ -51,16 +51,17 @@ public class Assignment1 {
 
 
 	}
-	//Populate Suppliers text file.
+	//Populate Suppliers text file into suppliers arraylist.
 	public void populateSuppliers() {
 
 		try (BufferedReader br = new BufferedReader(new FileReader(suppliersFile))) {
 			String st;
 			while ((st = br.readLine()) != null) {
-
-				String [] suppliers = st.split(";");
-				supplierList.add(new Suppliers(Integer.parseInt(suppliers[0]), suppliers[1], suppliers[2],suppliers[3]));
-
+				//added so that blank lines can be skipped.
+				if(st.length() > 0) {				
+					String [] suppliers = st.split(";");
+					supplierList.add(new Suppliers(Integer.parseInt(suppliers[0]), suppliers[1], suppliers[2],suppliers[3]));
+				}
 			}
 			br.close();
 		}catch (FileNotFoundException ex){
