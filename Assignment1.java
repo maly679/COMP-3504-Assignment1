@@ -27,19 +27,29 @@ public class Assignment1 {
 			String st;
 			while ((st = br.readLine()) != null) {
 
-				String [] items = st.split(";");
-				itemsList.add(new Items(Integer.parseInt(items[0]), items[1], Integer.parseInt(items[2]), Double.parseDouble(items[3]), Integer.parseInt(items[4])));
-
+				//added so that blank lines can be skipped.
+				if(st.length() > 0) {
+					String [] items = st.split(";");
+					itemsList.add(new Items(Integer.parseInt(items[0]), items[1], Integer.parseInt(items[2]), Double.parseDouble(items[3]), Integer.parseInt(items[4])));
+				}
 			}
 
 			br.close();
 		}catch (FileNotFoundException ex){
 			System.out.println(ex);
+			System.exit(0);
 
 		}
 		catch (IOException e){
 			System.out.println(e);
-		}			
+			System.exit(0);
+		}
+		catch (NumberFormatException nfe) {
+			System.out.println("Error in reading data from items.txt file. Please ensure that it contains the correct data types! Bye.");
+			System.exit(0);
+		}
+
+
 	}
 	//Populate Suppliers text file.
 	public void populateSuppliers() {
@@ -55,9 +65,15 @@ public class Assignment1 {
 			br.close();
 		}catch (FileNotFoundException ex){
 			System.out.println(ex);
+			System.exit(0);
 		}
 		catch (IOException ex){
 			System.out.println(ex);
+			System.exit(0);
+		}
+		catch (NumberFormatException nfe) {
+			System.out.println("Error in reading data from suppliers.txt file. Please ensure that it contains the correct data types! Bye.");
+			System.exit(0);	
 		}
 
 	}
@@ -66,13 +82,14 @@ public class Assignment1 {
 	public void displayOptions()  {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		//Selection Switch Case. Can be modified for new features/additions.
-		System.out.println("User Selection:" + "\r\n" + "0: Exit" + "\r\n" + "1: Add a new Tool");
+		System.out.println("Please select an option:" + "\r\n" + "0: Exit" + "\r\n" + "1: Add a new Tool");
+		System.out.print("\nUser Selection: ");
 
 		try {
 
 			int selection = Integer.parseInt(reader.readLine());
 			switch(selection) {
-				//Exit System
+			//Exit System
 			case 0:
 				System.out.println("Thanks for using the system! Good bye.");
 				System.exit(0);
@@ -96,10 +113,10 @@ public class Assignment1 {
 
 	public void addItem() {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-		System.out.println("Please enter the new tool information, separated by semi-colons, as shown below. " + "\r\n"
-				+ "If you want to cancel instead, enter exit." 
-				+ "\r\n" + "NOTE: Make sure that id, supplier id and quantity of stock are integers and that price is a number!" 
-				+ "\r\n" +  "Format Expected: id;description or name of tool;quantity in stock;price;supplier id");
+		System.out.println("\r\n" +  "Please enter new tool information in the following format:" + "\r\n\n" + "id;description or name of tool;quantity in stock;price;supplier id"
+				+ "\r\n\n" + "Ensure that id, supplier id and quantity of stock are integers and that price is a number!"
+				+ "\r\n" + "If you want to cancel this operation instead, enter exit." );
+		System.out.print("\nUser Entry: ");
 
 		String newItem = "";
 		try {
