@@ -66,7 +66,7 @@ public class Assignment1 {
 	public void displayOptions()  {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		//Selection Switch Case. Can be modified for new features/additions.
-		System.out.println("Please Select an option:" + "\r\n" + "0: Exit" + "\r\n" + "1: Add a new Tool");
+		System.out.println("User Selection:" + "\r\n" + "0: Exit" + "\r\n" + "1: Add a new Tool");
 
 		try {
 
@@ -80,8 +80,8 @@ public class Assignment1 {
 			case 1:
 				addItem();
 				break;
-				//Invalid Selection
 			default:
+				//Invalid Selection
 				System.out.println("Invalid selection. Please make sure you are selecting an available option");
 				displayOptions();
 			}
@@ -108,24 +108,24 @@ public class Assignment1 {
 				displayOptions();
 			}
 
-			//processing user input of new item. Splitting by the ';' for processing purposes.
+			//Processing user input of new item. Splitting by the ';' for processing purposes.
 			String [] newLineCheck = newItem.split(";");
 
-			//ensure it meets the length required.
+			//Ensure it meets the length required.
 			if (newLineCheck.length != 5) {
 				System.out.println("Error! The length of the tool information should total 5, and be separated by semi-colons!");
 				addItem();
 			}
 
 			try {
-				//assigning new object and value to global items array list.
+				//Assigning new object and value to global items array list.
 				assignNewItemsObject(newLineCheck);
 			} catch (NumberFormatException e) {
-				System.out.println("Incorrect input types! ID, Supplier ID and quantity in stock must all be integers, and the name of tool must be a string!");
-				return;
+				System.out.println("Incorrect input types! ID, Supplier ID and quantity in stock must all be integers, price a number, and the name of tool a string!");
+				addItem();
 			}
 
-			//re -joining as string, in order to add back into items text file, as required.
+			//Re -joining as string, in order to add back into items text file, as required.
 			newItem = String.join(";", newLineCheck);
 
 		} catch (Exception e) {
@@ -139,7 +139,7 @@ public class Assignment1 {
 
 	}
 
-	//Method for adding new item objects, upon user entry.
+	//Adding new Items object to ArrayList, upon addItem() invokation/user entry.
 	public void assignNewItemsObject(String [] newLineCheck) {
 
 		int id = Integer.parseInt(newLineCheck[0]);
@@ -151,6 +151,7 @@ public class Assignment1 {
 
 	}
 
+	//Output new item to file, upon addItem() invokation/user entry.
 	public void outputToItemsFile(String newItem) {
 
 		try(FileWriter fw = new FileWriter(itemsFile, true);
