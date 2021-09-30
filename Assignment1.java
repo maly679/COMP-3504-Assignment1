@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Assignment1 {
 
-	//Array lists of items and suppliers to be populated.
+	//array list of items and suppliers to be populated.
 	ArrayList<Items> itemsList = new ArrayList<Items>();
 	ArrayList<Suppliers> supplierList = new ArrayList<Suppliers>();
 
@@ -20,7 +20,7 @@ public class Assignment1 {
 		asg1.displayOptions();
 	}
 
-	//Populate Items text file into items arrayList.
+	//Populate Items text file.
 	public void populateItems() {
 
 		try (BufferedReader br = new BufferedReader(new FileReader(itemsFile))) {
@@ -51,17 +51,16 @@ public class Assignment1 {
 
 
 	}
-	//Populate Suppliers text file into suppliers arraylist.
+	//Populate Suppliers text file.
 	public void populateSuppliers() {
 
 		try (BufferedReader br = new BufferedReader(new FileReader(suppliersFile))) {
 			String st;
 			while ((st = br.readLine()) != null) {
-				//added so that blank lines can be skipped.
-				if(st.length() > 0) {				
-					String [] suppliers = st.split(";");
-					supplierList.add(new Suppliers(Integer.parseInt(suppliers[0]), suppliers[1], suppliers[2],suppliers[3]));
-				}
+
+				String [] suppliers = st.split(";");
+				supplierList.add(new Suppliers(Integer.parseInt(suppliers[0]), suppliers[1], suppliers[2],suppliers[3]));
+
 			}
 			br.close();
 		}catch (FileNotFoundException ex){
@@ -83,7 +82,7 @@ public class Assignment1 {
 	public void displayOptions()  {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		//Selection Switch Case. Can be modified for new features/additions.
-		System.out.println("Please select an option:" + "\r\n" + "0: Exit" + "\r\n" + "1: Add a new Tool");
+		System.out.println("Please select an option:" + "\r\n" + "0: Exit" + "\r\n" + "1: Add a new Tool" + "\r\n2: Check stock quantity");
 		System.out.print("\nUser Selection: ");
 
 		try {
@@ -97,6 +96,9 @@ public class Assignment1 {
 				//Add new Item
 			case 1:
 				addItem();
+				break;
+			case 2:	// Error checking; can be changed for later
+				stockCheck();
 				break;
 			default:
 				//Invalid Selection
@@ -167,6 +169,23 @@ public class Assignment1 {
 		int supplierId = Integer.parseInt(newLineCheck[4]);
 		itemsList.add(new Items(id, name, quantity, price, supplierId));
 
+	}
+
+	/**
+	 * Checks quantity of stock in inventory currently
+	 * @param 
+	 */
+	public void stockCheck() {
+		
+		for (Items i : itemsList) {
+			if (i.getQuantity() < 40) {
+				System.out.println("Quantity of item ID: " + i.getId() + " - " + i.getName() + " is below threshold." );
+			} else if (i.getQuantity() >= 40) {
+				// System.out.println(i.getName() + ", item ID: " + i.getId() + " has remaining quantity: " + i.getQuantity());
+			} else {
+				System.out.println("All stock is above threshold.");
+			}
+		}
 	}
 
 	//Output new item to file, upon addItem() invokation/user entry.
