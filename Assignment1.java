@@ -82,7 +82,7 @@ public class Assignment1 {
 	public void displayOptions()  {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		//Selection Switch Case. Can be modified for new features/additions.
-		System.out.println("Please select an option:" + "\r\n" + "0: Exit" + "\r\n" + "1: Add a new Tool");
+		System.out.println("Please select an option:" + "\r\n" + "0: Exit" + "\r\n" + "1: Add a new Tool" + "\r\n2: Check stock quantity");
 		System.out.print("\nUser Selection: ");
 
 		try {
@@ -96,6 +96,9 @@ public class Assignment1 {
 				//Add new Item
 			case 1:
 				addItem();
+				break;
+			case 2:	// Error checking; can be changed for later
+				stockCheck();
 				break;
 			default:
 				//Invalid Selection
@@ -166,6 +169,33 @@ public class Assignment1 {
 		int supplierId = Integer.parseInt(newLineCheck[4]);
 		itemsList.add(new Items(id, name, quantity, price, supplierId));
 
+	}
+
+	/**
+	 * Checks quantity of stocks currently in inventory
+	 * @param 
+	 */
+	public void stockCheck() {
+		
+		// Prints all items currently in inventory
+		for (Items i : itemsList) {
+			System.out.println(i.getId() + ";" + i.getName() + ";" + i.getQuantity() + ";" + i.getPrice() + ";" + i.getSupplierID());	// message to be changed
+
+			// Prints only items with stock below threshold
+			if (i.getQuantity() < 40) {		// Creates order line for item if stock < 40
+				System.out.println("Order line created: " + i.getId() + ";" + i.getQuantity() + ";" + i.getSupplierID());	// message to be changed
+				
+				// Calls order line for the item
+				// generateOrderline(i.getId(), i.getQuantity(), i.getSupplierID());	// method to be created
+			} else {	// No stock problem
+				// System.out.println("Item " + i.getId() + "-" + i.getName() + " is above threshold.\n");	// message to be changed
+			}
+		}
+
+		System.out.println();
+
+		// Return to main menu
+		displayOptions();
 	}
 
 	//Output new item to file, upon addItem() invokation/user entry.

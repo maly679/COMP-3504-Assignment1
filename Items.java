@@ -10,6 +10,7 @@ public class Items {
 	double price;
 	int supplierID;
 
+	// Constructor
 	public Items(int id,
 			String name, int quantity, double price, int supplierID) {
 
@@ -20,4 +21,50 @@ public class Items {
 		this.supplierID = supplierID;
 	}
 
+	// Beginning of getters
+	public int getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public int getSupplierID() {
+		return supplierID;
+	}
+
+	// Beginning of setters
+	public void setId() {
+		this.id = id;
+	}
+
+	public void setName() {
+		this.name = name;
+	}
+
+	public void setQuantity() {
+		this.quantity = quantity;
+	}
+
+	public void setPrice() {
+		this.price = price;
+	}
+
+	public void setSupplierID() {
+		this.supplierID = supplierID;
+	}
+
+	// String builder
+	public String toString() {
+		return "";
+	}
 }
