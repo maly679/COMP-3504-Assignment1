@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Assignment1 {
 
-	//array list of items and suppliers to be populated.
+	//Array list of items and suppliers to be populated.
 	ArrayList<Items> itemsList = new ArrayList<Items>();
 	ArrayList<Suppliers> supplierList = new ArrayList<Suppliers>();
 
@@ -20,7 +20,7 @@ public class Assignment1 {
 		asg1.displayOptions();
 	}
 
-	//Populate Items text file.
+	//Populate Items text file into arrayList.
 	public void populateItems() {
 
 		try (BufferedReader br = new BufferedReader(new FileReader(itemsFile))) {
@@ -51,16 +51,16 @@ public class Assignment1 {
 
 
 	}
-	//Populate Suppliers text file.
+	//Populate Suppliers text file into arrayList.
 	public void populateSuppliers() {
 
 		try (BufferedReader br = new BufferedReader(new FileReader(suppliersFile))) {
 			String st;
 			while ((st = br.readLine()) != null) {
-
-				String [] suppliers = st.split(";");
-				supplierList.add(new Suppliers(Integer.parseInt(suppliers[0]), suppliers[1], suppliers[2],suppliers[3]));
-
+				if(st.length() > 0) {
+					String [] suppliers = st.split(";");
+					supplierList.add(new Suppliers(Integer.parseInt(suppliers[0]), suppliers[1], suppliers[2],suppliers[3]));
+				}
 			}
 			br.close();
 		}catch (FileNotFoundException ex){
@@ -82,7 +82,7 @@ public class Assignment1 {
 	public void displayOptions()  {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		//Selection Switch Case. Can be modified for new features/additions.
-		System.out.println("Please select an option:" + "\r\n" + "0: Exit" + "\r\n" + "1: Add a new Tool" + "\r\n2: Check stock quantity");
+		System.out.println("Please select an option:" + "\r\n0: Exit" + "\r\n1: Add a new Tool" + "\r\n2: Check stock quantity" + "\r\n3: Search a Tool" + "\r\n4: Delete a Tool");
 		System.out.print("\nUser Selection: ");
 
 		try {
@@ -99,6 +99,12 @@ public class Assignment1 {
 				break;
 			case 2:	// Error checking; can be changed for later
 				stockCheck();
+				break;
+			case 3: 
+				searchTool();
+				break;
+			case 4:
+				deleteTool();
 				break;
 			default:
 				//Invalid Selection
@@ -176,7 +182,7 @@ public class Assignment1 {
 	 * @param 
 	 */
 	public void stockCheck() {
-		
+
 		// Prints all items currently in inventory
 		for (Items i : itemsList) {
 			System.out.println(i.getId() + ";" + i.getName() + ";" + i.getQuantity() + ";" + i.getPrice() + ";" + i.getSupplierID());	// message to be changed
@@ -184,7 +190,7 @@ public class Assignment1 {
 			// Prints only items with stock below threshold
 			if (i.getQuantity() < 40) {		// Creates order line for item if stock < 40
 				System.out.println("Order line created: " + i.getId() + ";" + i.getQuantity() + ";" + i.getSupplierID());	// message to be changed
-				
+
 				// Calls order line for the item
 				// generateOrderline(i.getId(), i.getQuantity(), i.getSupplierID());	// method to be created
 			} else {	// No stock problem
@@ -197,6 +203,117 @@ public class Assignment1 {
 		// Return to main menu
 		displayOptions();
 	}
+	public void searchTool () {
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+			System.out.println("\r\n" +  "Please enter the tool name or tool id, or enter exit to return to the original menu:" );
+			System.out.print("\nUser Entry: ");
+			String toolSearch = reader.readLine();
+			boolean found = false;
+			String searchAgain = "no";
+			if (toolSearch.equals("exit")) {
+				displayOptions();
+			} else {
+				for (Items i : itemsList) {
+					if (toolSearch.equals(Integer.toString(i.getId())) || toolSearch.equals(i.getName())) {
+						System.out.println("Selected Tool: \r\n\r\n" + i.getAllInfo() + "\r\n");
+						found = true;
+						System.out.println("Would you like to search for another tool? (yes/no): ");
+						searchAgain = reader.readLine();
+
+						break;						
+					} 
+				}
+				if (!found) {
+					System.out.println("Tool not found! Try again.");
+					searchTool();
+				}
+				if (searchAgain.equals("yes")) {
+					searchTool();
+				} else if (!searchAgain.equals("no")) {
+					System.out.println("Invalid entry! Returning to main menu. \r\n");
+				}
+			}
+		} catch (Exception e) {
+			System.out.println(e + " Invalid input! Please try again.");
+			searchTool();
+		}
+		displayOptions();
+	}
+
+	public void deleteTool() {
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+			System.out.println("\r\n" +  "Please enter the tool name or tool id to delete, or enter exit to return to the original menu:" );
+			System.out.print("\nUser Entry: ");
+			String toolSearch = reader.readLine();
+			boolean found = false;
+			String deleteToolPrompt = "no";
+			String toolToDelete = "";
+			if (toolSearch.equals("exit")) {
+				displayOptions();
+			} else {
+				for (Items i : itemsList) {
+					if (toolSearch.equals(Integer.toString(i.getId())) || toolSearch.equals(i.getName())) {
+						System.out.println("Selected Tool: \r\n\r\n" + i.getAllInfo() + "\r\n");
+						toolToDelete = i.getAllInfo();
+						//removes from arrayList
+						itemsList.remove(i);
+						System.out.println("Are you sure you want to delete this tool? (yes/no):");
+						deleteToolPrompt = reader.readLine();
+						found = true;
+						break;						
+					} 
+				}
+				if (!found) {
+					System.out.println("Tool not found! Try again.");
+					deleteTool();
+				}
+				if (deleteToolPrompt.equals("yes")) {
+					//Removes from text file
+					removeTool(toolToDelete);
+				} else {
+					if (!deleteToolPrompt.equals("yes")) {
+						System.out.println("Tool not removed! \r\n");
+						displayOptions();
+					}
+				}
+			}
+		} catch (Exception e) {
+			System.out.println(e + " Invalid input! Please try again.");
+			deleteTool();
+		}
+	}
+
+	//Remove tool from items.txt file
+	public void removeTool(String toolToDelete)  {
+
+		try (BufferedReader br = new BufferedReader(new FileReader(itemsFile))) {
+			File tempFile = new File("myTempFile.txt");
+			BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+			String st;
+			while ((st = br.readLine()) != null) {
+
+				String trimmedLine = st.trim();
+				if(trimmedLine.equals(toolToDelete.trim()))continue;
+				writer.write(st + System.getProperty("line.separator"));
+			}
+			System.out.println(toolToDelete + " has been successfully removed.");
+			br.close();
+			writer.close();
+			itemsFile.delete();
+			boolean successful = tempFile.renameTo(itemsFile);
+			displayOptions();
+		}catch (FileNotFoundException ex){
+			System.out.println(ex);
+			System.exit(0);
+
+		}
+		catch (IOException e){
+			System.out.println(e);
+			System.exit(0);
+		}
+	}
 
 	//Output new item to file, upon addItem() invokation/user entry.
 	public void outputToItemsFile(String newItem) {
@@ -206,7 +323,7 @@ public class Assignment1 {
 				PrintWriter out = new PrintWriter(bw))
 		{
 			//adding new Item to text file.
-			out.println(newItem);
+			out.println(System.getProperty("line.separator") + newItem);
 			out.close();
 			System.out.println(newItem + " added to items inventory successfully.");
 			//return to Display Options.
