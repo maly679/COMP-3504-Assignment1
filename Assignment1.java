@@ -172,20 +172,30 @@ public class Assignment1 {
 	}
 
 	/**
-	 * Checks quantity of stock in inventory currently
+	 * Checks quantity of stocks currently in inventory
 	 * @param 
 	 */
 	public void stockCheck() {
 		
+		// Prints all items currently in inventory
 		for (Items i : itemsList) {
-			if (i.getQuantity() < 40) {
-				System.out.println("Quantity of item ID: " + i.getId() + " - " + i.getName() + " is below threshold." );
-			} else if (i.getQuantity() >= 40) {
-				// System.out.println(i.getName() + ", item ID: " + i.getId() + " has remaining quantity: " + i.getQuantity());
-			} else {
-				System.out.println("All stock is above threshold.");
+			System.out.println(i.getId() + ";" + i.getName() + ";" + i.getQuantity() + ";" + i.getPrice() + ";" + i.getSupplierID());	// message to be changed
+
+			// Prints only items with stock below threshold
+			if (i.getQuantity() < 40) {		// Creates order line for item if stock < 40
+				System.out.println("Order line created: " + i.getId() + ";" + i.getQuantity() + ";" + i.getSupplierID());	// message to be changed
+				
+				// Calls order line for the item
+				// generateOrderline(i.getId(), i.getQuantity(), i.getSupplierID());	// method to be created
+			} else {	// No stock problem
+				// System.out.println("Item " + i.getId() + "-" + i.getName() + " is above threshold.\n");	// message to be changed
 			}
 		}
+
+		System.out.println();
+
+		// Return to main menu
+		displayOptions();
 	}
 
 	//Output new item to file, upon addItem() invokation/user entry.
