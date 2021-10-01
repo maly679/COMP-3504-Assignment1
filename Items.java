@@ -20,7 +20,10 @@ public class Items {
 		this.price = price;
 		this.supplierID = supplierID;
 	}
-
+	
+	public String getAllInfo() {
+		return (this.id + ";" + this.name + ";" + this.quantity + ";" + this.price + ";" + this.supplierID);
+	}
 	// Beginning of getters
 	public int getId() {
 		return id;
