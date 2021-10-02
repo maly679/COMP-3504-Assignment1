@@ -46,23 +46,23 @@ public class Items {
 	}
 
 	// Beginning of setters
-	public void setId() {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public void setName() {
+	public void setName(String name) {
 		this.name = name;
 	}
 
-	public void setQuantity() {
+	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
 
-	public void setPrice() {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 
-	public void setSupplierID() {
+	public void setSupplierID(int supplierID) {
 		this.supplierID = supplierID;
 	}
 
