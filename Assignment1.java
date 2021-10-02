@@ -251,10 +251,13 @@ public class Assignment1 {
 				case 2: // Add item to order line not presently there
 					addToOrderLine(orderLine);
 					break;
-				case 3:	// Prints order line to orders.txt
+				case 3: // Remove item from order line that already exists
+					removeFromOrderLine(orderLine);
+					break;
+				case 4:	// Prints order line to orders.txt
 					 outputToOrdersFile(orderLine);
 					break;
-				case 4: // Returns to main menu
+				case 5: // Returns to main menu
 					displayOptions();
 					break;
 				default:	//Invalid Selection
@@ -343,7 +346,7 @@ public class Assignment1 {
 	 * Locates and removes item from order line matched with items ID
 	 * @param orderLine - Removes from orderline
 	 */
-	public void removeOrderLine(ArrayList<Orders> orderLine) {
+	public void removeFromOrderLine(ArrayList<Orders> orderLine) {
 		BufferedReader reader1 = new BufferedReader(new InputStreamReader(System.in));
 		BufferedReader reader2 = new BufferedReader(new InputStreamReader(System.in));
 		int itemID;
