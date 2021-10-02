@@ -239,7 +239,7 @@ public class Assignment1 {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		int selection;
 		
-		System.out.println("Would you like to modify an item's order amount?\n1. YES, Modify Orders\n2. NO, Export Order Line to Output File\n3. NO, Return to main menu");
+		System.out.println("Would you like to modify an item's order amount?\n1. YES, Modify Orders\n2. YES, Add To Order\n3. NO, Export Order Line to Output File\n4. NO, Return to main menu");
 		System.out.print("\nUser Selection: ");
 		
 		try {
@@ -248,10 +248,13 @@ public class Assignment1 {
 				case 1:	// Modifies item quantity in order line
 					modifyOrderLine(orderLine);
 					break;
-				case 2:	// Prints order line to orders.txt
+				case 2: // Add item to order line not presently there
+					addToOrderLine(orderLine);
+					break;
+				case 3:	// Prints order line to orders.txt
 					 outputToOrdersFile(orderLine);
 					break;
-				case 3: // Returns to main menu
+				case 4: // Returns to main menu
 					displayOptions();
 					break;
 				default:	//Invalid Selection
@@ -296,6 +299,40 @@ public class Assignment1 {
 			System.out.println("Input not recognized. Please try again.");
 			modifyOrderLine(orderLine);
 		}
+	}
+	
+	
+	public void addToOrderLine(ArrayList<Orders> orderLine) {
+		BufferedReader reader1 = new BufferedReader(new InputStreamReader(System.in));
+		BufferedReader reader2 = new BufferedReader(new InputStreamReader(System.in));
+		int itemID;
+		int itemAmount;
+		int index;
+		
+		System.out.print("Which item do you want to order (Please enter Item ID): ");
+		
+		try {
+			itemID = Integer.parseInt(reader1.readLine());
+			for (Items i : itemsList) {
+				if (i.getId() == itemID) {
+					System.out.print("Enter amount to order: ");
+					itemAmount = Integer.parseInt(reader2.readLine());
+					for (Suppliers s : supplierList) {
+						if (i.getSupplierID() == s.getId()) {
+							orderLine.add(new Orders(i.getId(), i.getName(), itemAmount, s.getCompanyName()));
+						} else {}
+					}
+				} else {}
+			}
+		} catch (Exception IOE) {
+			System.out.println("Input not recognized. Please try again.");
+			addToOrderLine(orderLine);
+		}
+		
+		// 
+		previewOrderLine(orderLine);
+		// 
+		optionsOrderLine(orderLine);
 	}
 	
 	/**
