@@ -82,7 +82,7 @@ public class Assignment1 {
 	public void displayOptions()  {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		//Selection Switch Case. Can be modified for new features/additions.
-		System.out.println("Please select an option:" + "\r\n0: Exit" + "\r\n1: Add a new Tool" + "\r\n2: Check stock quantity" + "\r\n3: Search a Tool" + "\r\n4: Delete a Tool");
+		System.out.println("Please select an option:" + "\r\n0: Exit" + "\r\n1: Add a new Tool" + "\r\n2: Check stock quantity" + "\r\n3: Search a Tool" + "\r\n4: Delete a Tool" + "\r\n5: Generate order line");
 		System.out.print("\nUser Selection: ");
 
 		try {
@@ -105,6 +105,9 @@ public class Assignment1 {
 				break;
 			case 4:
 				deleteTool();
+				break;
+			case 5:
+				generateOrderline();
 				break;
 			default:
 				//Invalid Selection
@@ -178,8 +181,7 @@ public class Assignment1 {
 	}
 
 	/**
-	 * Checks quantity of stocks currently in inventory
-	 * @param 
+	 * Displays quantity of all stocks currently in inventory
 	 */
 	public void stockCheck() {
 
@@ -187,22 +189,170 @@ public class Assignment1 {
 		for (Items i : itemsList) {
 			System.out.println(i.getId() + ";" + i.getName() + ";" + i.getQuantity() + ";" + i.getPrice() + ";" + i.getSupplierID());	// message to be changed
 
-			// Prints only items with stock below threshold
-			if (i.getQuantity() < 40) {		// Creates order line for item if stock < 40
-				System.out.println("Order line created: " + i.getId() + ";" + i.getQuantity() + ";" + i.getSupplierID());	// message to be changed
-
-				// Calls order line for the item
-				// generateOrderline(i.getId(), i.getQuantity(), i.getSupplierID());	// method to be created
+			if (i.getQuantity() < 40) {		// Displays stock with quantity below 40
+				 System.out.println("Item Below Threshold: " + i.getId() + ";" + i.getQuantity() + ";" + i.getSupplierID());	// message to be changed
 			} else {	// No stock problem
-				// System.out.println("Item " + i.getId() + "-" + i.getName() + " is above threshold.\n");	// message to be changed
 			}
 		}
-
-		System.out.println();
 
 		// Return to main menu
 		displayOptions();
 	}
+
+	/**
+	 * Generates an order line for stock with quantity below 40
+	 * Places stock with quantity below 40 into an Orders arrayList
+	 */
+	public void generateOrderline() {
+		int orderAmount = 0;
+		final int DEFAULTQUANTITY = 50;
+		
+		ArrayList<Orders> orderLine = new ArrayList<Orders>();
+		
+		for (Items i : itemsList) {
+			if (i.getQuantity() < 40) {		// Finds order line item with stock below 40
+				// Assigns order amount to default values
+				orderAmount = DEFAULTQUANTITY - i.getQuantity();
+				
+				for (Suppliers s : supplierList) {
+					if (i.getSupplierID() == s.getId()) {	// Finds corresponding Supplier information for item
+						orderLine.add(new Orders(i.getId(), i.getName(), orderAmount, s.getCompanyName()));
+					} else {
+					}
+				}
+			} else {	// No stock problem
+			}
+		}
+		
+		// Prints a preview of the order line
+		previewOrderLine(orderLine);
+		// Returns to order line sub-menu
+		optionsOrderLine(orderLine);
+		
+	}
+	
+	/**
+	 * Menu options for the order line sub-menu
+	 * @param orderLine - Orders arrayList
+	 */
+	public void optionsOrderLine(ArrayList<Orders> orderLine) {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		int selection;
+		
+		System.out.println("Would you like to modify an item's order amount?\n1. YES, Modify Orders\n2. NO, Export Order Line to Output File\n3. NO, Return to main menu");
+		System.out.print("\nUser Selection: ");
+		
+		try {
+			selection = Integer.parseInt(reader.readLine());
+			switch(selection) {
+				case 1:	// Modifies item quantity in order line
+					modifyOrderLine(orderLine);
+					break;
+				case 2:	// Prints order line to orders.txt
+					 outputToOrdersFile(orderLine);
+					break;
+				case 3: // Returns to main menu
+					displayOptions();
+					break;
+				default:	//Invalid Selection
+					System.out.println("Invalid selection. Please make sure you are selecting an available option");
+					optionsOrderLine(orderLine);
+			}
+
+		} catch (Exception IOE) {
+			System.out.println("Make sure you are entering a valid selection number!");
+			displayOptions();
+		}
+	}
+	
+	/**
+	 * Alters order amount for specified item, matched with item's id
+	 * @param orderLine - Orders arrayList
+	 */
+	public void modifyOrderLine(ArrayList<Orders> orderLine) {
+		BufferedReader reader1 = new BufferedReader(new InputStreamReader(System.in));
+		BufferedReader reader2 = new BufferedReader(new InputStreamReader(System.in));
+		int itemID;
+		int itemAmount;
+		int index;
+		
+		System.out.print("Enter Item ID to change amount: ");
+		
+		try {
+			itemID = Integer.parseInt(reader1.readLine());
+			for (int i = 0; i < orderLine.size(); i++) {
+				if (orderLine.get(i).getItemId() == itemID) {
+					System.out.print("Enter change quantity amount: ");
+					itemAmount = Integer.parseInt(reader2.readLine());
+					orderLine.get(i).setItemAmount(itemAmount);
+				} else {}
+			}
+			
+			// Prints a preview of the order line
+			previewOrderLine(orderLine);
+			// Returns to order line sub-menu
+			optionsOrderLine(orderLine);
+		} catch (Exception IOE) {
+			System.out.println("Input not recognized. Please try again.");
+			modifyOrderLine(orderLine);
+		}
+	}
+	
+	/**
+	 * Prints a preview of the order line
+	 * @param orderLine - Orders arrayList
+	 */
+	private void previewOrderLine(ArrayList<Orders> orderLine) {
+		System.out.println("PREVIEW OF ORDER LINE");
+		
+		System.out.println("**********************************************************************" 
+				+ "\nORDER ID.: <orderID>\nDate Ordered: <date>");
+		
+		for (Orders o : orderLine) {
+			System.out.println(o.stringBuilder());
+		}
+		
+		System.out.println("**********************************************************************");
+	}
+	
+	/**
+	 * Prints order line to orders.txt in file explorer
+	 * @param orderLine - Orders arrayList
+	 * @throws IOException
+	 */
+	private void outputToOrdersFile(ArrayList<Orders> orderLine) throws IOException {
+		int orderID;
+		Random rand = new Random();
+		int minRange = 10000, maxRange = 99999;
+		Date date = new Date();
+		
+		orderID = rand.nextInt(maxRange - minRange) + minRange;
+		String content1 = "**********************************************************************"
+				+ "\nORDER ID.: " + orderID + "\nDate Ordered: " + date + "\n\n";
+		
+		String content3 = "**********************************************************************";
+		
+		// append mode
+		// if file not exists, create and write
+		// if file exists, append to the end of the file
+		try (FileWriter fw = new FileWriter("orders.txt", true);
+			BufferedWriter bw = new BufferedWriter(fw)) {
+
+			bw.write(content1);
+			for (Orders o : orderLine) {
+				bw.write(o.stringBuilder());
+			}
+			bw.write(content3);
+			bw.newLine();   // add new line, System.lineSeparator()
+
+		}
+		
+		System.out.println("Order line has been written to file explorer\n");
+		
+		// Return to main menu
+		displayOptions();
+	}
+
 	public void searchTool () {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
