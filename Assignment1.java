@@ -239,7 +239,7 @@ public class Assignment1 {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		int selection;
 		
-		System.out.println("Would you like to modify an item's order amount?\n1. YES, Modify Orders\n2. YES, Add To Order\n3. NO, Export Order Line to Output File\n4. NO, Return to main menu");
+		System.out.println("Would you like to modify an item's order amount?\n1. YES, Modify Orders\n2. YES, Remove an Order\n3. YES, Add To Order\n4. NO, Export Order Line to Output File\n5. NO, Return to main menu");
 		System.out.print("\nUser Selection: ");
 		
 		try {
@@ -251,10 +251,13 @@ public class Assignment1 {
 				case 2: // Add item to order line not presently there
 					addToOrderLine(orderLine);
 					break;
-				case 3:	// Prints order line to orders.txt
+				case 3: // Remove item from order line that already exists
+					removeFromOrderLine(orderLine);
+					break;
+				case 4:	// Prints order line to orders.txt
 					 outputToOrdersFile(orderLine);
 					break;
-				case 4: // Returns to main menu
+				case 5: // Returns to main menu
 					displayOptions();
 					break;
 				default:	//Invalid Selection
@@ -301,7 +304,10 @@ public class Assignment1 {
 		}
 	}
 	
-	
+	/**
+	 * Adds an item line to orderLine by obtaining item ID and amount to add
+	 * @param orderLine - Adds to orderline
+	 */
 	public void addToOrderLine(ArrayList<Orders> orderLine) {
 		BufferedReader reader1 = new BufferedReader(new InputStreamReader(System.in));
 		BufferedReader reader2 = new BufferedReader(new InputStreamReader(System.in));
@@ -333,6 +339,38 @@ public class Assignment1 {
 		previewOrderLine(orderLine);
 		// 
 		optionsOrderLine(orderLine);
+	}
+	
+	
+	/**
+	 * Locates and removes item from order line matched with items ID
+	 * @param orderLine - Removes from orderline
+	 */
+	public void removeFromOrderLine(ArrayList<Orders> orderLine) {
+		BufferedReader reader1 = new BufferedReader(new InputStreamReader(System.in));
+		BufferedReader reader2 = new BufferedReader(new InputStreamReader(System.in));
+		int itemID;
+		int index;
+		
+		System.out.println("Which item do you want to delete (Please eneter item ID): ");
+		
+		try {
+			itemID = Integer.parseInt(reader1.readLine());
+			for (int i = 0; i < orderLine.size(); i++) {
+				if (orderLine.get(i).getItemId() == itemID) {
+					orderLine.remove(i);
+				} else {}
+			}
+			
+			// Prints a preview of the order line
+			previewOrderLine(orderLine);
+			// Returns to order line sub-menu
+			optionsOrderLine(orderLine);
+			
+		} catch (Exception IOE) {
+			System.out.println("Item not found. Please try again.");
+			removeFromOrderLine(orderLine);
+		}
 	}
 	
 	/**
