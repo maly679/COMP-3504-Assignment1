@@ -239,7 +239,7 @@ public class Assignment1 {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		int selection;
 		
-		System.out.println("Would you like to modify an item's order amount?\n1. YES, Modify Orders\n2. YES, Add To Order\n3. NO, Export Order Line to Output File\n4. NO, Return to main menu");
+		System.out.println("Would you like to modify an item's order amount?\n1. YES, Modify Orders\n2. YES, Remove an Order\n3. YES, Add To Order\n4. NO, Export Order Line to Output File\n5. NO, Return to main menu");
 		System.out.print("\nUser Selection: ");
 		
 		try {
@@ -350,27 +350,26 @@ public class Assignment1 {
 		BufferedReader reader1 = new BufferedReader(new InputStreamReader(System.in));
 		BufferedReader reader2 = new BufferedReader(new InputStreamReader(System.in));
 		int itemID;
-		int itemAmount;
 		int index;
 		
 		System.out.println("Which item do you want to delete (Please eneter item ID): ");
 		
 		try {
 			itemID = Integer.parseInt(reader1.readLine());
-			for (Items i : itemsList) {
-				if (i.getId() == itemID) {
-					System.out.print("Enter amount to remove from this order: ");
-					itemAmount = Integer.parseInt(reader2.readLine());
-					for (Suppliers s : supplierList) {
-						if (i.getSupplierID() == s.getId()) {
-							orderLine.remove(new Orders(i.getId(), i.getName(), itemAmount, s.getCompanyName()));
-						} else {}
-					}
+			for (int i = 0; i < orderLine.size(); i++) {
+				if (orderLine.get(i).getItemId() == itemID) {
+					orderLine.remove(i);
 				} else {}
 			}
+			
+			// Prints a preview of the order line
+			previewOrderLine(orderLine);
+			// Returns to order line sub-menu
+			optionsOrderLine(orderLine);
+			
 		} catch (Exception IOE) {
-			System.out.println("Input not recognized. Please try again.");
-			addToOrderLine(orderLine);
+			System.out.println("Item not found. Please try again.");
+			removeFromOrderLine(orderLine);
 		}
 	}
 	
