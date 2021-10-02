@@ -301,7 +301,10 @@ public class Assignment1 {
 		}
 	}
 	
-	
+	/**
+	 * Adds an item line to orderLine by obtaining item ID and amount to add
+	 * @param orderLine - Adds to orderline
+	 */
 	public void addToOrderLine(ArrayList<Orders> orderLine) {
 		BufferedReader reader1 = new BufferedReader(new InputStreamReader(System.in));
 		BufferedReader reader2 = new BufferedReader(new InputStreamReader(System.in));
@@ -333,6 +336,39 @@ public class Assignment1 {
 		previewOrderLine(orderLine);
 		// 
 		optionsOrderLine(orderLine);
+	}
+	
+	
+	/**
+	 * Locates and removes item from order line matched with items ID
+	 * @param orderLine - Removes from orderline
+	 */
+	public void removeOrderLine(ArrayList<Orders> orderLine) {
+		BufferedReader reader1 = new BufferedReader(new InputStreamReader(System.in));
+		BufferedReader reader2 = new BufferedReader(new InputStreamReader(System.in));
+		int itemID;
+		int itemAmount;
+		int index;
+		
+		System.out.println("Which item do you want to delete (Please eneter item ID): ");
+		
+		try {
+			itemID = Integer.parseInt(reader1.readLine());
+			for (Items i : itemsList) {
+				if (i.getId() == itemID) {
+					System.out.print("Enter amount to remove from this order: ");
+					itemAmount = Integer.parseInt(reader2.readLine());
+					for (Suppliers s : supplierList) {
+						if (i.getSupplierID() == s.getId()) {
+							orderLine.remove(new Orders(i.getId(), i.getName(), itemAmount, s.getCompanyName()));
+						} else {}
+					}
+				} else {}
+			}
+		} catch (Exception IOE) {
+			System.out.println("Input not recognized. Please try again.");
+			addToOrderLine(orderLine);
+		}
 	}
 	
 	/**
