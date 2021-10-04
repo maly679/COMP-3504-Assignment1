@@ -4,6 +4,9 @@ import java.util.*;
 
 public class Assignment1 {
 
+	int orderID;
+	Date date;
+	
 	//Array list of items and suppliers to be populated.
 	ArrayList<Items> itemsList = new ArrayList<Items>();
 	ArrayList<Suppliers> supplierList = new ArrayList<Suppliers>();
@@ -239,7 +242,7 @@ public class Assignment1 {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		int selection;
 		
-		System.out.println("Would you like to modify an item's order amount?\n1. YES, Modify Orders\n2. YES, Add To Order\n3. NO, Export Order Line to Output File\n4. NO, Return to main menu");
+		System.out.println("Would you like to modify an item's order amount?\n1. YES, Modify Orders\n2. YES, Add To Order\n3. YES, Remove An Order\n4. NO, Export Order Line to Output File\n5. NO, Return to main menu");
 		System.out.print("\nUser Selection: ");
 		
 		try {
@@ -251,10 +254,13 @@ public class Assignment1 {
 				case 2: // Add item to order line not presently there
 					addToOrderLine(orderLine);
 					break;
-				case 3:	// Prints order line to orders.txt
+				case 3: // Remove item from order line that already exists
+					removeFromOrderLine(orderLine);
+					break;
+				case 4:	// Prints order line to orders.txt
 					 outputToOrdersFile(orderLine);
 					break;
-				case 4: // Returns to main menu
+				case 5: // Returns to main menu
 					displayOptions();
 					break;
 				default:	//Invalid Selection
@@ -343,31 +349,30 @@ public class Assignment1 {
 	 * Locates and removes item from order line matched with items ID
 	 * @param orderLine - Removes from orderline
 	 */
-	public void removeOrderLine(ArrayList<Orders> orderLine) {
+	public void removeFromOrderLine(ArrayList<Orders> orderLine) {
 		BufferedReader reader1 = new BufferedReader(new InputStreamReader(System.in));
 		BufferedReader reader2 = new BufferedReader(new InputStreamReader(System.in));
 		int itemID;
-		int itemAmount;
 		int index;
 		
 		System.out.println("Which item do you want to delete (Please eneter item ID): ");
 		
 		try {
 			itemID = Integer.parseInt(reader1.readLine());
-			for (Items i : itemsList) {
-				if (i.getId() == itemID) {
-					System.out.print("Enter amount to remove from this order: ");
-					itemAmount = Integer.parseInt(reader2.readLine());
-					for (Suppliers s : supplierList) {
-						if (i.getSupplierID() == s.getId()) {
-							orderLine.remove(new Orders(i.getId(), i.getName(), itemAmount, s.getCompanyName()));
-						} else {}
-					}
+			for (int i = 0; i < orderLine.size(); i++) {
+				if (orderLine.get(i).getItemId() == itemID) {
+					orderLine.remove(i);
 				} else {}
 			}
+			
+			// Prints a preview of the order line
+			previewOrderLine(orderLine);
+			// Returns to order line sub-menu
+			optionsOrderLine(orderLine);
+			
 		} catch (Exception IOE) {
-			System.out.println("Input not recognized. Please try again.");
-			addToOrderLine(orderLine);
+			System.out.println("Item not found. Please try again.");
+			removeFromOrderLine(orderLine);
 		}
 	}
 	
@@ -376,10 +381,13 @@ public class Assignment1 {
 	 * @param orderLine - Orders arrayList
 	 */
 	private void previewOrderLine(ArrayList<Orders> orderLine) {
+		generateOrderId();
+		generateOrderDate();
+		
 		System.out.println("PREVIEW OF ORDER LINE");
 		
 		System.out.println("**********************************************************************" 
-				+ "\nORDER ID.: <orderID>\nDate Ordered: <date>");
+				+ "\nORDER ID.: " + orderID + "\nDate Ordered: " + date);
 		
 		for (Orders o : orderLine) {
 			System.out.println(o.stringBuilder());
@@ -394,12 +402,7 @@ public class Assignment1 {
 	 * @throws IOException
 	 */
 	private void outputToOrdersFile(ArrayList<Orders> orderLine) throws IOException {
-		int orderID;
-		Random rand = new Random();
-		int minRange = 10000, maxRange = 99999;
-		Date date = new Date();
 		
-		orderID = rand.nextInt(maxRange - minRange) + minRange;
 		String content1 = "**********************************************************************"
 				+ "\nORDER ID.: " + orderID + "\nDate Ordered: " + date + "\n\n";
 		
@@ -424,6 +427,21 @@ public class Assignment1 {
 		
 		// Return to main menu
 		displayOptions();
+	}
+	
+	private int generateOrderId() {
+		Random rand = new Random();
+		int minRange = 10000, maxRange = 99999;
+		
+		orderID = rand.nextInt(maxRange - minRange) + minRange;
+		
+		return orderID;
+	}
+	
+	private Date generateOrderDate() {
+		date = new Date();
+		
+		return date;
 	}
 
 	public void searchTool () {
