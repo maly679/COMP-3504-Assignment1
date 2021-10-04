@@ -503,31 +503,31 @@ public class Assignment1 {
 			if (toolSearch.equals("exit")) {
 				displayOptions();
 			} else {
-				for (Items i : itemsList) {
-					if (toolSearch.equals(Integer.toString(i.getId())) || toolSearch.equals(i.getName())) {
-						System.out.println("Selected Tool: \r\n\r\n" + i.getAllInfo() + "\r\n");
-						toolToDelete = i.getAllInfo();
+				for (int i = 0; i < itemsList.size(); i++) {
+					if (toolSearch.equals(Integer.toString(itemsList.get(i).getId())) || toolSearch.equals(itemsList.get(i).getName())) {
+						System.out.println("Selected Tool: \r\n\r\n" + itemsList.get(i).getAllInfo() + "\r\n");
 						//removes from arrayList
-						itemsList.remove(i);
 						System.out.println("Are you sure you want to delete this tool? (yes/no):");
 						deleteToolPrompt = reader.readLine();
-						found = true;
-						break;						
+						if (deleteToolPrompt.equals("yes")) {
+							toolToDelete = itemsList.get(i).getAllInfo();
+							//Removes from text file
+							itemsList.remove(i);
+							removeTool(toolToDelete);
+							found = true;
+							break;				
+						}
 					} 
 				}
 				if (!found) {
 					System.out.println("Tool not found! Try again.");
 					deleteTool();
 				}
-				if (deleteToolPrompt.equals("yes")) {
-					//Removes from text file
-					removeTool(toolToDelete);
-				} else {
+
 					if (!deleteToolPrompt.equals("yes")) {
 						System.out.println("Tool not removed! \r\n");
 						displayOptions();
 					}
-				}
 			}
 		} catch (Exception e) {
 			System.out.println(e + " Invalid input! Please try again.");
