@@ -381,7 +381,10 @@ public class Assignment1 {
 	 * @param orderLine - Orders arrayList
 	 */
 	private void previewOrderLine(ArrayList<Orders> orderLine) {
+		// Calls for order ID to be generated
 		generateOrderId();
+
+		// Calls for date to be generated
 		generateOrderDate();
 		
 		System.out.println("PREVIEW OF ORDER LINE");
@@ -429,6 +432,9 @@ public class Assignment1 {
 		displayOptions();
 	}
 	
+	/**
+	 * Generates a date for order line
+	 */
 	private int generateOrderId() {
 		Random rand = new Random();
 		int minRange = 10000, maxRange = 99999;
@@ -438,6 +444,9 @@ public class Assignment1 {
 		return orderID;
 	}
 	
+	/**
+	 * Generates an order ID for order line
+	 */
 	private Date generateOrderDate() {
 		date = new Date();
 		
