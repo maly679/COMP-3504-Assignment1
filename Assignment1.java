@@ -4,6 +4,9 @@ import java.util.*;
 
 public class Assignment1 {
 
+	int orderID;
+	Date date;
+	
 	//Array list of items and suppliers to be populated.
 	ArrayList<Items> itemsList = new ArrayList<Items>();
 	ArrayList<Suppliers> supplierList = new ArrayList<Suppliers>();
@@ -239,7 +242,7 @@ public class Assignment1 {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		int selection;
 		
-		System.out.println("Would you like to modify an item's order amount?\n1. YES, Modify Orders\n2. YES, Remove an Order\n3. YES, Add To Order\n4. NO, Export Order Line to Output File\n5. NO, Return to main menu");
+		System.out.println("Would you like to modify an item's order amount?\n1. YES, Modify Orders\n2. YES, Add To Order\n3. YES, Remove An Order\n4. NO, Export Order Line to Output File\n5. NO, Return to main menu");
 		System.out.print("\nUser Selection: ");
 		
 		try {
@@ -378,10 +381,16 @@ public class Assignment1 {
 	 * @param orderLine - Orders arrayList
 	 */
 	private void previewOrderLine(ArrayList<Orders> orderLine) {
+		// Calls for order ID to be generated
+		generateOrderId();
+
+		// Calls for date to be generated
+		generateOrderDate();
+		
 		System.out.println("PREVIEW OF ORDER LINE");
 		
 		System.out.println("**********************************************************************" 
-				+ "\nORDER ID.: <orderID>\nDate Ordered: <date>");
+				+ "\nORDER ID.: " + orderID + "\nDate Ordered: " + date);
 		
 		for (Orders o : orderLine) {
 			System.out.println(o.stringBuilder());
@@ -396,12 +405,7 @@ public class Assignment1 {
 	 * @throws IOException
 	 */
 	private void outputToOrdersFile(ArrayList<Orders> orderLine) throws IOException {
-		int orderID;
-		Random rand = new Random();
-		int minRange = 10000, maxRange = 99999;
-		Date date = new Date();
 		
-		orderID = rand.nextInt(maxRange - minRange) + minRange;
 		String content1 = "**********************************************************************"
 				+ "\nORDER ID.: " + orderID + "\nDate Ordered: " + date + "\n\n";
 		
@@ -426,6 +430,27 @@ public class Assignment1 {
 		
 		// Return to main menu
 		displayOptions();
+	}
+	
+	/**
+	 * Generates a date for order line
+	 */
+	private int generateOrderId() {
+		Random rand = new Random();
+		int minRange = 10000, maxRange = 99999;
+		
+		orderID = rand.nextInt(maxRange - minRange) + minRange;
+		
+		return orderID;
+	}
+	
+	/**
+	 * Generates an order ID for order line
+	 */
+	private Date generateOrderDate() {
+		date = new Date();
+		
+		return date;
 	}
 
 	public void searchTool () {
